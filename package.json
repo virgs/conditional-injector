@@ -1,0 +1,60 @@
+{
+  "name": "conditional-injector",
+  "version": "1.0.0",
+  "description": "Typescript dependency injectional based on conditional expressions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lopidio/conditional-injector.git"
+  },
+  "keywords": [
+    "typescript",
+    "dependency-injection",
+    "predicate",
+    "injection",
+    "smart",
+    "conditional",
+    "injector",
+    "javascript",
+    "javascript-library"
+  ],
+  "author": "Virgs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lopidio/conditional-injector/issues"
+  },
+  "homepage": "https://github.com/lopidio/conditional-injector#readme",
+  "devDependencies": {
+    "@types/jest": "^22.2.0",
+    "@types/node": "^9.4.6",
+    "jest": "^22.4.2",
+    "ts-jest": "^22.4.1",
+    "ts-node": "^4.1.0",
+    "tsd": "^0.6.5",
+    "typescript": "^2.7.2"
+  },
+  "bin": {
+    "json-placeholder-replacer": "dist/index.js"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": ".*\\.test\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ]
+  },
+  "dependencies": {
+    "npm": "^5.8.0"
+  }
+}
