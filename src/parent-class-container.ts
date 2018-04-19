@@ -1,8 +1,8 @@
-import {Injection} from "../src/Injection";
+import * as Options from "./options";
 
 export interface Injectable {
     name: string;
-    options: Injection.Options;
+    options: Options.Options;
     constructor: ObjectConstructor;
     singletonInstance?: any;
 }
@@ -15,16 +15,13 @@ export class ParentClassContainer {
 
     public create = (argument?: any): any => {
         for (const injectable in this.injectables) {
-            console.log("Aina ain")
             const factoryPredicate = this.injectables[injectable].options.predicate;
             if (factoryPredicate && factoryPredicate(argument)) {
                 if (this.injectables[injectable].singletonInstance) {
-                    console.log("Lopez")
                     return this.injectables[injectable].singletonInstance;
 
                 }
-                else if (this.injectables[injectable].options.scope == Injection.Scope.Singleton) {
-                    console.log("Ahoa")
+                else if (this.injectables[injectable].options.scope == Options.Scope.Singleton) {
                     this.injectables[injectable].singletonInstance = new this.injectables[injectable].constructor(argument);
                     return this.injectables[injectable].singletonInstance;
                 } else {
@@ -34,17 +31,13 @@ export class ParentClassContainer {
 
         }
         if (this.default) {
-            console.log("Lopez arriba: " + Injection.Scope.Singleton + "->" + JSON.stringify(this.default))
             if (this.defaultSingletonInstance) {
-                console.log("Lopez abajo")
                 return this.defaultSingletonInstance;
             }
-            else if (this.default.options.scope == Injection.Scope.Singleton) {
+            else if (this.default.options.scope == Options.Scope.Singleton) {
                 this.defaultSingletonInstance = new this.default.constructor(argument);
-                console.log("Lopez acentro: " + JSON.stringify(this.defaultSingletonInstance))
                 return this.defaultSingletonInstance;
             } else {
-                console.log("Lopez adentro")
                 return new this.default.constructor(argument);
             }
         }
@@ -60,7 +53,7 @@ export class ParentClassContainer {
     }
 
     public addInjectable = (injectable: Injectable): any => {
-        if (injectable.options.creation == Injection.Creation.Default) {
+        if (injectable.options.creation == Options.Creation.Default) {
             this.default = injectable;
         }
         else {
