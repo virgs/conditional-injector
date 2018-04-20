@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Scope;
 (function (Scope) {
-    Scope[Scope["Singleton"] = 1] = "Singleton";
+    Scope[Scope["Application"] = 1] = "Application";
     Scope[Scope["Request"] = 2] = "Request";
 })(Scope = exports.Scope || (exports.Scope = {}));
 ;

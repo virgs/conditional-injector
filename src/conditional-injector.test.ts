@@ -73,46 +73,46 @@ describe('ConditionalInjector', function() {
         expect(injectedList.length).toBe(2);
     });
 
-    it('should return different instances if not singleton', function() {
+    it('should return different instances if not Application', function() {
         class ParentClass {};
         @Injectable()
-        class NotSingletonClass extends ParentClass {
+        class NotApplicationClass extends ParentClass {
             public value: number = 0;
         }
 
         const firstInjection = Container.subclassesOf(ParentClass).create();
         const secondInjection = Container.subclassesOf(ParentClass).create();
 
-        (<NotSingletonClass>firstInjection).value = 2;
-        expect((<NotSingletonClass>secondInjection).value).toBe(0)
+        (<NotApplicationClass>firstInjection).value = 2;
+        expect((<NotApplicationClass>secondInjection).value).toBe(0)
     });
 
-    it('default options should be NotSingleton and NoPredicate', function() {
+    it('default options should be NotApplication and NoPredicate', function() {
         class ParentClass {};
         @Injectable()
-        class NotSingletonClass extends ParentClass {
+        class NotApplicationClass extends ParentClass {
             public value: number = 0;
         }
 
         const firstInjection = Container.subclassesOf(ParentClass).create();
         const secondInjection = Container.subclassesOf(ParentClass).create();
 
-        (<NotSingletonClass>firstInjection).value = 2;
-        expect((<NotSingletonClass>secondInjection).value).toBe(0)
+        (<NotApplicationClass>firstInjection).value = 2;
+        expect((<NotApplicationClass>secondInjection).value).toBe(0)
     });
 
-    it('should return same instance if singleton', function() {
-        class SingletonParentClass {};
-        @Injectable({scope: Scope.Singleton})
-        class SingletonClass extends SingletonParentClass {
+    it('should return same instance if Application', function() {
+        class ApplicationParentClass {};
+        @Injectable({scope: Scope.Application})
+        class ApplicationClass extends ApplicationParentClass {
             public value: number = 0;
         }
 
-        const firstInjection = Container.subclassesOf(SingletonParentClass).create();
-        const secondInjection = Container.subclassesOf(SingletonParentClass).create();
+        const firstInjection = Container.subclassesOf(ApplicationParentClass).create();
+        const secondInjection = Container.subclassesOf(ApplicationParentClass).create();
 
-        (firstInjection as SingletonClass).value = 2;
-        expect((<SingletonClass>secondInjection).value).toBe(2);
+        (firstInjection as ApplicationClass).value = 2;
+        expect((<ApplicationClass>secondInjection).value).toBe(2);
     });
 
     it('should return null if no superclass is registered', function() {
@@ -171,7 +171,7 @@ describe('ConditionalInjector', function() {
         @Injectable()
         class SubClassB extends ParentEveryTestClass {}
 
-        @Injectable({scope: Scope.Singleton, predicate: (value) => value == "c"})
+        @Injectable({scope: Scope.Application, predicate: (value) => value == "c"})
         class SubClassC extends ParentEveryTestClass {public c = 1;}
 
         let expectedClasses: Function[] = ["SubClassA", "SubClassB", "SubClassC"];

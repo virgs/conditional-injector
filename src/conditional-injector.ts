@@ -78,7 +78,7 @@ export class ParentClassContainer {
         if (injectable.singletonInstance) {
             return injectable.singletonInstance;
         }
-        else if (injectable.options.scope == Options.Scope.Singleton) {
+        else if (injectable.options.scope == Options.Scope.Application) {
             injectable.singletonInstance = new injectable.constructor(argument);
             return injectable.singletonInstance;
         } else {

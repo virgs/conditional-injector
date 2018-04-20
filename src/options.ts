@@ -4,15 +4,14 @@ export type Options = {
 }
 
 export enum Scope {
-    Singleton = 1,
+    Application = 1,
     Request = 2
 };
 
 export type Predicate = (argument: any) => boolean;
 
-
 export function completeAttributes(option?: Options): Options {
-    const defaultOption: Options = { scope: Scope.Request}
+    const defaultOption: Options = {scope: Scope.Request};
     if (!option)
         return defaultOption;
     return {

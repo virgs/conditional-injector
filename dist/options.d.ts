@@ -3,7 +3,7 @@ export declare type Options = {
     predicate?: Predicate;
 };
 export declare enum Scope {
-    Singleton = 1,
+    Application = 1,
     Request = 2,
 }
 export declare type Predicate = (argument: any) => boolean;
