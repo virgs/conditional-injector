@@ -1,7 +1,7 @@
-import {Container, Injectable} from "./parent-class-container";
+import {Container, Injectable} from "./conditional-injector";
 import {Scope} from "./options";
 
-describe('Injector', function() {
+describe('ConditionalInjector', function() {
 
     it('should inject object correctly', function() {
         class ParentClass {};

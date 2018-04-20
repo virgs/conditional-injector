@@ -32,7 +32,7 @@ export function Injectable(options?: Options.Options) {
     };
 }
 
-export interface Injectable {
+type Injectable = {
     name: string;
     options: Options.Options;
     constructor: ObjectConstructor;
