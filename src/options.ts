@@ -1,6 +1,5 @@
 export type Options = {
     scope?: Scope;
-    creation?: Creation;
     predicate?: Predicate;
 }
 
@@ -9,27 +8,16 @@ export enum Scope {
     Request = 2
 };
 
-export enum Creation {
-    Multi = 1,
-    Default = 2
-};
-
 export type Predicate = (argument: any) => boolean;
 
-export function createdDefaultOption(option?: Options) {
+export function createdDefaultOption(option?: Options): Options {
     if (!option)
         return {
-            scope: Scope.Request,
-            creation: Creation.Default
+            scope: Scope.Request
         }
-    let defaultOption: any = {
-        scope: option.scope || Scope.Request
+
+    return {
+        scope: option.scope || Scope.Request,
+        predicate: option.predicate
     };
-    if (option.creation)
-        defaultOption.creation = option.creation;
-    else if (option.predicate)
-        defaultOption.predicate = option.predicate;
-    else
-        defaultOption.creation = Creation.Default;
-    return defaultOption;
 }

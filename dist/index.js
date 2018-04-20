@@ -6,4 +6,3 @@ var injectable_1 = require("./injectable");
 exports.Injectable = injectable_1.Injectable;
 var options_1 = require("./options");
 exports.Scope = options_1.Scope;
-exports.Creation = options_1.Creation;

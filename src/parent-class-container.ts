@@ -16,7 +16,12 @@ export class ParentClassContainer {
 
         for (const injectable in this.injectables) {
             const factoryPredicate = this.injectables[injectable].options.predicate;
-            if (factoryPredicate && factoryPredicate(argument)) {
+            let predicateResult = false;
+            try {
+                predicateResult = factoryPredicate(argument);
+            }
+            catch (err) {}
+            if (factoryPredicate && predicateResult) {
                 if (this.injectables[injectable].singletonInstance) {
                     return this.injectables[injectable].singletonInstance;
                 }
@@ -52,7 +57,7 @@ export class ParentClassContainer {
     }
 
     public addInjectable = (injectable: Injectable): any => {
-        if (injectable.options.creation == Options.Creation.Default) {
+        if (!injectable.options.predicate) {
             this.default = injectable;
         }
         else {

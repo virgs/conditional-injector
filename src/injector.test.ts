@@ -1,6 +1,6 @@
 import {Injectable} from "./injectable";
 import {Container} from "./container";
-import {Creation, Scope} from "./options";
+import {Scope} from "./options";
 
 describe('Injector', function() {
 
@@ -28,19 +28,19 @@ describe('Injector', function() {
 
     it('should inject last added DefaultObject', function() {
         class ParentClass {};
-        @Injectable({creation: Creation.Default})
+        @Injectable()
         class DefaultClass extends ParentClass {}
 
-        @Injectable({creation: Creation.Default})
+        @Injectable()
         class AnotherDefaultClass extends ParentClass {}
 
         const injected = Container.get(ParentClass).create("wrong");
         expect(injected).toBeInstanceOf(AnotherDefaultClass);
     });
 
-    it('should inject DefaultObject if it does not succeed', function() {
+    it('should inject DefaultObject if it does no predicate is satisfied', function() {
         class ParentClass {};
-        @Injectable({creation: Creation.Default})
+        @Injectable()
         class DefaultClass extends ParentClass {}
 
         @Injectable({predicate: () => false})
@@ -64,7 +64,7 @@ describe('Injector', function() {
         expect((<NotSingletonClass>secondInjection).value).toBe(0)
     });
 
-    it('default options should be NotSingleton and WithNoPredicate', function() {
+    it('default options should be NotSingleton and NoPredicate', function() {
         class ParentClass {};
         @Injectable()
         class NotSingletonClass extends ParentClass {
@@ -93,10 +93,41 @@ describe('Injector', function() {
     });
 
     it('should return null if no superclass is registered', function() {
-        class SingletonParentClass {};
+        class NoSubClassSuperClass {};
 
-        const injection = Container.get(SingletonParentClass).create();
+        const injection = Container.get(NoSubClassSuperClass).create();
         expect(injection).toBeNull();
+    });
+
+    it('should instantiate with given param', function() {
+        const param = "param";
+        class ParamSuperClass {};
+        @Injectable()
+        class SubParamClass extends ParamSuperClass {
+            constructor(arg: any) {
+                super();
+                expect(arg).toBe(param);
+            }
+        }
+
+        Container.get(ParamSuperClass).create(param);
+    });
+
+    it('should handle predicate exception', function() {
+        class ExceptionSuperClass {};
+        @Injectable({predicate: () => {throw Error()})
+        class ExceptionSubClass extends ExceptionSuperClass {}
+
+        expect(() => Container.get(ExceptionSuperClass).create()).not.toThrow();
+    });
+
+    it('should handle predicate runtime error', function() {
+        class ExceptionSuperClass {};
+        @Injectable({predicate: (argument) => argument.inexistentProperty.anotherThing})
+        class ExceptionSubClass extends ExceptionSuperClass {}
+
+        Container.get(ExceptionSuperClass).create("")
+        // expect(() => Container.get(ExceptionSuperClass).create()).not.toThrow();
     });
 
     it('should instantiate every subclass', function() {
