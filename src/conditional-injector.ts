@@ -80,11 +80,13 @@ export class ParentClassContainer {
         return null;
     }
 
-    public createAll = (argument: any): any[] => {
+    public createAll = (argument?: any): any[] => {
         let returnList = [];
         for (const injectable in this.injectables) {
             returnList.push(new this.injectables[injectable].constructor(argument));
         }
+        if (this.default)
+            returnList.push(new this.default.constructor(argument));
         return returnList;
     }
 

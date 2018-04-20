@@ -7,7 +7,7 @@ export declare class ParentClassContainer {
     private injectables;
     private default?;
     create: (argument?: any) => any;
-    createAll: (argument: any) => any[];
+    createAll: (argument?: any) => any[];
     addInjectable: (injectable: {
         name: string;
         options: Options.Options;

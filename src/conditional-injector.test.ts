@@ -131,27 +131,14 @@ describe('ConditionalInjector', function() {
 
     it('should instantiate every subclass', function() {
         expect.extend({
-            toContainInstanceOfAny(instanceList, classList) {
-                for (const instance of instanceList) {
-                    let instanceOfSome = true;
-                    for (const clazz of classList) {
-                        instanceOfSome = (instance instanceof clazz);
-                        if (instanceOfSome)
-                            break;
-                    }
-                    if (!instanceOfSome)
-                        return {
-                            message: () => (`${this.utils.printReceived(instance)} is not an instance of any class of the list ${this.utils.printExpected(classList)}`),
-                            pass: false
-                        }
-                }
-
-                return {
-                    message: () => (`OK`),
-                    pass: true
-                }
+            toBeTruthyWithMessage(received, errMsg) {
+                const result = {
+                    pass: received,
+                    message: () => errMsg
+                };
+                return result;
             }
-        })
+        });
 
         class ParentEveryTestClass {}
         @Injectable({predicate: () => false})
@@ -163,8 +150,15 @@ describe('ConditionalInjector', function() {
         @Injectable({scope: Scope.Singleton, predicate: (value) => value == "c"})
         class SubClassC extends ParentEveryTestClass {public c = 1;}
 
+        let expectedClasses: Function[] = ["SubClassA", "SubClassB", "SubClassC"];
+
         const injectedList: ParentEveryTestClass[] = Container.subclassesOf(ParentEveryTestClass).createAll({anyStuff: "blahBlah"});
-        expect(injectedList).toContainInstanceOfAny([SubClassA, SubClassB, SubClassC]);
+
+        injectedList.map(injected => {
+            const indexOfClassName = expectedClasses.indexOf(injected.constructor.name);
+            expect(indexOfClassName > -1).toBeTruthyWithMessage(`${injected.constructor.name} is not a class of the following list: ${expectedClasses}`);
+            expectedClasses.splice(indexOfClassName, 1);
+        });
 
         const firstC: ParentEveryTestClass = Container.subclassesOf(ParentEveryTestClass).create("c");
         expect(firstC).toBeInstanceOf(SubClassC);

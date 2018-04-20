@@ -7,13 +7,12 @@ var Scope;
 })(Scope = exports.Scope || (exports.Scope = {}));
 ;
 function createdDefaultOption(option) {
+    const defaultOption = { scope: Scope.Request };
     if (!option)
-        return {
-            scope: Scope.Request
-        };
+        return defaultOption;
     return {
-        scope: option.scope || Scope.Request,
-        predicate: option.predicate
+        scope: option.scope || defaultOption.scope,
+        predicate: option.predicate || defaultOption.predicate
     };
 }
 exports.createdDefaultOption = createdDefaultOption;
