@@ -162,10 +162,10 @@ describe('ConditionalInjector', function() {
 
         const firstC: ParentEveryTestClass = Container.subclassesOf(ParentEveryTestClass).create("c");
         expect(firstC).toBeInstanceOf(SubClassC);
-
         (firstC as SubClassC).c = 3;
-        const secondC: ParentEveryTestClass = Container.subclassesOf(ParentEveryTestClass).create("c");
-        expect((secondC as SubClassC).c).toBe(3);
+
+        const secondC: SubClassC = injectedList.filter(injected => injected.constructor.name == "SubClassC")[0];
+        expect(secondC.c).toBe(3);
 
     });
 

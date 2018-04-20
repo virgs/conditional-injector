@@ -68,6 +68,7 @@ export class ParentClassContainer {
         }
         if (this.default) {
             if (this.default.singletonInstance) {
+                console.log("Using singleton")
                 return this.default.singletonInstance;
             }
             else if (this.default.options.scope == Options.Scope.Singleton) {
@@ -81,12 +82,32 @@ export class ParentClassContainer {
     }
 
     public createAll = (argument?: any): any[] => {
+        console.log("Creating all")
         let returnList = [];
         for (const injectable in this.injectables) {
-            returnList.push(new this.injectables[injectable].constructor(argument));
+            if (this.injectables[injectable].singletonInstance) {
+                returnList.push(this.injectables[injectable].singletonInstance);
+            }
+            else if (this.injectables[injectable].options.scope == Options.Scope.Singleton) {
+                this.injectables[injectable].singletonInstance = new this.injectables[injectable].constructor(argument);
+                returnList.push(this.injectables[injectable].singletonInstance);
+            } else {
+                returnList.push(new this.injectables[injectable].constructor(argument));
+            }
         }
-        if (this.default)
-            returnList.push(new this.default.constructor(argument));
+        if (this.default) {
+            if (this.default.singletonInstance) {
+                returnList.push(this.default.singletonInstance);
+            }
+            else if (this.default.options.scope == Options.Scope.Singleton) {
+                console.log("Creating singleton")
+                this.default.singletonInstance = new this.default.constructor(argument) as Injectable;
+                returnList.push(this.default.singletonInstance);
+            } else {
+                returnList.push(new this.default.constructor(argument));
+            }
+        }
+
         return returnList;
     }
 
