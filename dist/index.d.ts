@@ -1,3 +1,2 @@
-export { Container } from "./container";
-export { Injectable } from "./injectable";
+export { Container, Injectable } from "./parent-class-container";
 export { Options, Scope, Predicate } from "./options";

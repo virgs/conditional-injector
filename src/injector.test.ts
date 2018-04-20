@@ -1,5 +1,4 @@
-import {Injectable} from "./injectable";
-import {Container} from "./container";
+import {Container, Injectable} from "./parent-class-container";
 import {Scope} from "./options";
 
 describe('Injector', function() {
@@ -12,8 +11,8 @@ describe('Injector', function() {
         @Injectable({predicate: (argument: string) => argument == "someOtherValue"})
         class SomeSubClass extends ParentClass {}
 
-        const sub = Container.get(ParentClass).create("object");
-        const some = Container.get(ParentClass).create("someOtherValue");
+        const sub = Container.subclassesOf(ParentClass).create("object");
+        const some = Container.subclassesOf(ParentClass).create("someOtherValue");
 
         expect(sub).toBeInstanceOf(SubClass);
         expect(some).toBeInstanceOf(SomeSubClass);
@@ -21,7 +20,7 @@ describe('Injector', function() {
 
     it('should inject null if no Null is given and no factory function returns true', function() {
         class ParentClass {};
-        const injected = Container.get(ParentClass).create("wrong");
+        const injected = Container.subclassesOf(ParentClass).create("wrong");
 
         expect(injected).toBeNull();
     });
@@ -34,7 +33,7 @@ describe('Injector', function() {
         @Injectable()
         class AnotherDefaultClass extends ParentClass {}
 
-        const injected = Container.get(ParentClass).create("wrong");
+        const injected = Container.subclassesOf(ParentClass).create("wrong");
         expect(injected).toBeInstanceOf(AnotherDefaultClass);
     });
 
@@ -46,7 +45,7 @@ describe('Injector', function() {
         @Injectable({predicate: () => false})
         class PredicateClass extends ParentClass {}
 
-        const injected = Container.get(ParentClass).create();
+        const injected = Container.subclassesOf(ParentClass).create();
         expect(injected).toBeInstanceOf(DefaultClass);
     });
 
@@ -57,8 +56,8 @@ describe('Injector', function() {
             public value: number = 0;
         }
 
-        const firstInjection = Container.get(ParentClass).create();
-        const secondInjection = Container.get(ParentClass).create();
+        const firstInjection = Container.subclassesOf(ParentClass).create();
+        const secondInjection = Container.subclassesOf(ParentClass).create();
 
         (<NotSingletonClass>firstInjection).value = 2;
         expect((<NotSingletonClass>secondInjection).value).toBe(0)
@@ -71,8 +70,8 @@ describe('Injector', function() {
             public value: number = 0;
         }
 
-        const firstInjection = Container.get(ParentClass).create();
-        const secondInjection = Container.get(ParentClass).create();
+        const firstInjection = Container.subclassesOf(ParentClass).create();
+        const secondInjection = Container.subclassesOf(ParentClass).create();
 
         (<NotSingletonClass>firstInjection).value = 2;
         expect((<NotSingletonClass>secondInjection).value).toBe(0)
@@ -85,8 +84,8 @@ describe('Injector', function() {
             public value: number = 0;
         }
 
-        const firstInjection = Container.get(SingletonParentClass).create();
-        const secondInjection = Container.get(SingletonParentClass).create();
+        const firstInjection = Container.subclassesOf(SingletonParentClass).create();
+        const secondInjection = Container.subclassesOf(SingletonParentClass).create();
 
         (firstInjection as SingletonClass).value = 2;
         expect((<SingletonClass>secondInjection).value).toBe(2);
@@ -95,7 +94,7 @@ describe('Injector', function() {
     it('should return null if no superclass is registered', function() {
         class NoSubClassSuperClass {};
 
-        const injection = Container.get(NoSubClassSuperClass).create();
+        const injection = Container.subclassesOf(NoSubClassSuperClass).create();
         expect(injection).toBeNull();
     });
 
@@ -110,7 +109,7 @@ describe('Injector', function() {
             }
         }
 
-        Container.get(ParamSuperClass).create(param);
+        Container.subclassesOf(ParamSuperClass).create(param);
     });
 
     it('should handle predicate exception', function() {
@@ -118,7 +117,7 @@ describe('Injector', function() {
         @Injectable({predicate: () => {throw Error()})
         class ExceptionSubClass extends ExceptionSuperClass {}
 
-        expect(() => Container.get(ExceptionSuperClass).create()).not.toThrow();
+        expect(() => Container.subclassesOf(ExceptionSuperClass).create()).not.toThrow();
     });
 
     it('should handle predicate runtime error', function() {
@@ -126,7 +125,7 @@ describe('Injector', function() {
         @Injectable({predicate: (argument) => argument.inexistentProperty.anotherThing})
         class ExceptionSubClass extends ExceptionSuperClass {}
 
-        Container.get(ExceptionSuperClass).create("")
+        Container.subclassesOf(ExceptionSuperClass).create("")
         // expect(() => Container.get(ExceptionSuperClass).create()).not.toThrow();
     });
 
@@ -164,14 +163,14 @@ describe('Injector', function() {
         @Injectable({scope: Scope.Singleton, predicate: (value) => value == "c"})
         class SubClassC extends ParentEveryTestClass {public c = 1;}
 
-        const injectedList: ParentEveryTestClass[] = Container.get(ParentEveryTestClass).createAll({anyStuff: "blahBlah"});
+        const injectedList: ParentEveryTestClass[] = Container.subclassesOf(ParentEveryTestClass).createAll({anyStuff: "blahBlah"});
         expect(injectedList).toContainInstanceOfAny([SubClassA, SubClassB, SubClassC]);
 
-        const firstC: ParentEveryTestClass = Container.get(ParentEveryTestClass).create("c");
+        const firstC: ParentEveryTestClass = Container.subclassesOf(ParentEveryTestClass).create("c");
         expect(firstC).toBeInstanceOf(SubClassC);
 
         (firstC as SubClassC).c = 3;
-        const secondC: ParentEveryTestClass = Container.get(ParentEveryTestClass).create("c");
+        const secondC: ParentEveryTestClass = Container.subclassesOf(ParentEveryTestClass).create("c");
         expect((secondC as SubClassC).c).toBe(3);
 
     });

@@ -1,5 +1,37 @@
 import * as Options from "./options";
 
+let injectableContainer: any = {};
+export class Container {
+    public static subclassesOf(superClass: any): ParentClassContainer {
+        const superClassName: string = superClass.prototype.constructor.name;
+        return injectableContainer[superClassName] || { create: () => null};
+    }
+}
+
+const getSuperClassContainer = (superClassName: string): any => {
+    if (!injectableContainer[superClassName])
+        injectableContainer[superClassName] = new ParentClassContainer();
+
+    return injectableContainer[superClassName];
+}
+
+export function Injectable(options?: Options.Options) {
+    return function(constructor: any) {
+        var superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
+        const className = constructor.prototype.constructor.name;
+        const injectableContainer: ParentClassContainer = getSuperClassContainer(superClassName);
+
+        let mergedOption = Options.createdDefaultOption(options);
+        injectableContainer
+            .addInjectable(
+                {
+                    name: className,
+                    constructor: constructor,
+                    options: mergedOption
+                });
+    };
+}
+
 export interface Injectable {
     name: string;
     options: Options.Options;

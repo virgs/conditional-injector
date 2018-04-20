@@ -8,6 +8,34 @@ var __importStar = (this && this.__importStar) || function (mod) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 const Options = __importStar(require("./options"));
+let injectableContainer = {};
+class Container {
+    static subclassesOf(superClass) {
+        const superClassName = superClass.prototype.constructor.name;
+        return injectableContainer[superClassName] || { create: () => null };
+    }
+}
+exports.Container = Container;
+const getSuperClassContainer = (superClassName) => {
+    if (!injectableContainer[superClassName])
+        injectableContainer[superClassName] = new ParentClassContainer();
+    return injectableContainer[superClassName];
+};
+function Injectable(options) {
+    return function (constructor) {
+        var superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
+        const className = constructor.prototype.constructor.name;
+        const injectableContainer = getSuperClassContainer(superClassName);
+        let mergedOption = Options.createdDefaultOption(options);
+        injectableContainer
+            .addInjectable({
+            name: className,
+            constructor: constructor,
+            options: mergedOption
+        });
+    };
+}
+exports.Injectable = Injectable;
 class ParentClassContainer {
     constructor() {
         this.injectables = {};
