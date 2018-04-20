@@ -69,14 +69,10 @@ class ParentClassContainer {
             return returnList;
         };
         this.addInjectable = (injectable) => {
-            if (!injectable.options.predicate) {
+            if (!injectable.options.predicate)
                 this.defaultList.push(injectable);
-            }
-            else {
-                // if (this.predicatesList[injectable.name])
-                //     return null;
+            else
                 this.predicatesList.push(injectable);
-            }
             return injectable;
         };
     }

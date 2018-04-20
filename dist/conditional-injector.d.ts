@@ -14,5 +14,10 @@ export declare class ParentClassContainer {
         options: Options.Options;
         constructor: ObjectConstructor;
         singletonInstance?: any;
-    }) => any;
+    }) => {
+        name: string;
+        options: Options.Options;
+        constructor: ObjectConstructor;
+        singletonInstance?: any;
+    };
 }

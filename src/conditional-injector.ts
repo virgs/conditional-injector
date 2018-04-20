@@ -45,7 +45,6 @@ export class ParentClassContainer {
     private defaultList: Injectable[] = [];
 
     public create = (argument?: any): any => {
-
         for (const injectable of this.predicatesList) {
             const factoryPredicate = injectable.options.predicate;
             if (!factoryPredicate)
@@ -56,7 +55,6 @@ export class ParentClassContainer {
                 }
             }
             catch (err) {}
-
         }
         if (this.defaultList.length > 0) {
             let lastAddedDefault = this.defaultList[this.defaultList.length - 1];
@@ -73,7 +71,6 @@ export class ParentClassContainer {
         for (const injectable of this.defaultList) {
             returnList.push(this.instantiateInjectable(injectable, argument));
         }
-
         return returnList;
     }
 
@@ -89,15 +86,11 @@ export class ParentClassContainer {
         }
     }
 
-    public addInjectable = (injectable: Injectable): any => {
-        if (!injectable.options.predicate) {
+    public addInjectable = (injectable: Injectable): Injectable => {
+        if (!injectable.options.predicate)
             this.defaultList.push(injectable);
-        }
-        else {
-            // if (this.predicatesList[injectable.name])
-            //     return null;
+        else
             this.predicatesList.push(injectable);
-        }
         return injectable;
     }
 }
