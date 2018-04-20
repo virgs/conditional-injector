@@ -7,8 +7,7 @@ export interface Injectable {
 }
 export declare class ParentClassContainer {
     private injectables;
-    private default;
-    private defaultSingletonInstance?;
+    private default?;
     create: (argument?: any) => any;
     createAll: (argument: any) => any[];
     addInjectable: (injectable: Injectable) => any;

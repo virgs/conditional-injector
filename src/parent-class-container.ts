@@ -10,16 +10,15 @@ export interface Injectable {
 export class ParentClassContainer {
 
     private injectables: any = {};
-    private default: any = null;
-    private defaultSingletonInstance?: any;
+    private default?: Injectable;
 
     public create = (argument?: any): any => {
+
         for (const injectable in this.injectables) {
             const factoryPredicate = this.injectables[injectable].options.predicate;
             if (factoryPredicate && factoryPredicate(argument)) {
                 if (this.injectables[injectable].singletonInstance) {
                     return this.injectables[injectable].singletonInstance;
-
                 }
                 else if (this.injectables[injectable].options.scope == Options.Scope.Singleton) {
                     this.injectables[injectable].singletonInstance = new this.injectables[injectable].constructor(argument);
@@ -31,12 +30,12 @@ export class ParentClassContainer {
 
         }
         if (this.default) {
-            if (this.defaultSingletonInstance) {
-                return this.defaultSingletonInstance;
+            if (this.default.singletonInstance) {
+                return this.default.singletonInstance;
             }
             else if (this.default.options.scope == Options.Scope.Singleton) {
-                this.defaultSingletonInstance = new this.default.constructor(argument);
-                return this.defaultSingletonInstance;
+                this.default.singletonInstance = new this.default.constructor(argument) as Injectable;
+                return this.default.singletonInstance;
             } else {
                 return new this.default.constructor(argument);
             }
