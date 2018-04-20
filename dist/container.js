@@ -9,7 +9,7 @@ class Container {
     }
     static get(superClass) {
         const superClassName = superClass.prototype.constructor.name;
-        return Container.injectableContainer[superClassName];
+        return Container.injectableContainer[superClassName] || { create: () => null };
     }
 }
 Container.injectableContainer = {};

@@ -92,6 +92,13 @@ describe('Injector', function() {
         expect((<SingletonClass>secondInjection).value).toBe(2);
     });
 
+    it('should return null if no superclass is registered', function() {
+        class SingletonParentClass {};
+
+        const injection = Container.get(SingletonParentClass).create();
+        expect(injection).toBeNull();
+    });
+
     it('should instantiate every subclass', function() {
         expect.extend({
             toContainInstanceOfAny(instanceList, classList) {

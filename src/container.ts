@@ -13,6 +13,6 @@ export class Container {
 
     public static get(superClass: any): ParentClassContainer {
         const superClassName: string = superClass.prototype.constructor.name;
-        return Container.injectableContainer[superClassName];
+        return Container.injectableContainer[superClassName] || {create: () => null};
     }
 }
