@@ -7,4 +7,4 @@ export declare enum Scope {
     Request = 2,
 }
 export declare type Predicate = (argument: any) => boolean;
-export declare function createdDefaultOption(option?: Options): Options;
+export declare function completeAttributes(option?: Options): Options;

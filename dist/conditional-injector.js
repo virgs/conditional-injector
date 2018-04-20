@@ -26,7 +26,7 @@ function Injectable(options) {
         var superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
         const className = constructor.prototype.constructor.name;
         const injectableContainer = getSuperClassContainer(superClassName);
-        let mergedOption = Options.createdDefaultOption(options);
+        let mergedOption = Options.completeAttributes(options);
         injectableContainer
             .addInjectable({
             name: className,
@@ -38,84 +38,59 @@ function Injectable(options) {
 exports.Injectable = Injectable;
 class ParentClassContainer {
     constructor() {
-        this.injectables = {};
+        this.predicatesList = [];
+        this.defaultList = [];
         this.create = (argument) => {
-            for (const injectable in this.injectables) {
-                const factoryPredicate = this.injectables[injectable].options.predicate;
-                let predicateResult = false;
+            for (const injectable of this.predicatesList) {
+                const factoryPredicate = injectable.options.predicate;
+                if (!factoryPredicate)
+                    continue;
                 try {
-                    predicateResult = factoryPredicate(argument);
+                    if (factoryPredicate(argument)) {
+                        return this.instantiateInjectable(injectable, argument);
+                    }
                 }
                 catch (err) { }
-                if (factoryPredicate && predicateResult) {
-                    if (this.injectables[injectable].singletonInstance) {
-                        return this.injectables[injectable].singletonInstance;
-                    }
-                    else if (this.injectables[injectable].options.scope == Options.Scope.Singleton) {
-                        this.injectables[injectable].singletonInstance = new this.injectables[injectable].constructor(argument);
-                        return this.injectables[injectable].singletonInstance;
-                    }
-                    else {
-                        return new this.injectables[injectable].constructor(argument);
-                    }
-                }
             }
-            if (this.default) {
-                if (this.default.singletonInstance) {
-                    console.log("Using singleton");
-                    return this.default.singletonInstance;
-                }
-                else if (this.default.options.scope == Options.Scope.Singleton) {
-                    this.default.singletonInstance = new this.default.constructor(argument);
-                    return this.default.singletonInstance;
-                }
-                else {
-                    return new this.default.constructor(argument);
-                }
+            if (this.defaultList.length > 0) {
+                let lastAddedDefault = this.defaultList[this.defaultList.length - 1];
+                return this.instantiateInjectable(lastAddedDefault, argument);
             }
             return null;
         };
         this.createAll = (argument) => {
-            console.log("Creating all");
             let returnList = [];
-            for (const injectable in this.injectables) {
-                if (this.injectables[injectable].singletonInstance) {
-                    returnList.push(this.injectables[injectable].singletonInstance);
-                }
-                else if (this.injectables[injectable].options.scope == Options.Scope.Singleton) {
-                    this.injectables[injectable].singletonInstance = new this.injectables[injectable].constructor(argument);
-                    returnList.push(this.injectables[injectable].singletonInstance);
-                }
-                else {
-                    returnList.push(new this.injectables[injectable].constructor(argument));
-                }
+            for (const injectable of this.predicatesList) {
+                returnList.push(this.instantiateInjectable(injectable, argument));
             }
-            if (this.default) {
-                if (this.default.singletonInstance) {
-                    returnList.push(this.default.singletonInstance);
-                }
-                else if (this.default.options.scope == Options.Scope.Singleton) {
-                    console.log("Creating singleton");
-                    this.default.singletonInstance = new this.default.constructor(argument);
-                    returnList.push(this.default.singletonInstance);
-                }
-                else {
-                    returnList.push(new this.default.constructor(argument));
-                }
+            for (const injectable of this.defaultList) {
+                returnList.push(this.instantiateInjectable(injectable, argument));
             }
             return returnList;
         };
         this.addInjectable = (injectable) => {
             if (!injectable.options.predicate) {
-                this.default = injectable;
+                this.defaultList.push(injectable);
             }
             else {
-                if (this.injectables[injectable.name])
-                    return null;
-                this.injectables[injectable.name] = injectable;
+                // if (this.predicatesList[injectable.name])
+                //     return null;
+                this.predicatesList.push(injectable);
             }
             return injectable;
         };
+    }
+    instantiateInjectable(injectable, argument) {
+        if (injectable.singletonInstance) {
+            return injectable.singletonInstance;
+        }
+        else if (injectable.options.scope == Options.Scope.Singleton) {
+            injectable.singletonInstance = new injectable.constructor(argument);
+            return injectable.singletonInstance;
+        }
+        else {
+            return new injectable.constructor(argument);
+        }
     }
 }
 exports.ParentClassContainer = ParentClassContainer;

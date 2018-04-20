@@ -6,7 +6,7 @@ var Scope;
     Scope[Scope["Request"] = 2] = "Request";
 })(Scope = exports.Scope || (exports.Scope = {}));
 ;
-function createdDefaultOption(option) {
+function completeAttributes(option) {
     const defaultOption = { scope: Scope.Request };
     if (!option)
         return defaultOption;
@@ -15,4 +15,4 @@ function createdDefaultOption(option) {
         predicate: option.predicate || defaultOption.predicate
     };
 }
-exports.createdDefaultOption = createdDefaultOption;
+exports.completeAttributes = completeAttributes;

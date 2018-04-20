@@ -4,10 +4,11 @@ export declare class Container {
 }
 export declare function Injectable(options?: Options.Options): (constructor: any) => void;
 export declare class ParentClassContainer {
-    private injectables;
-    private default?;
+    private predicatesList;
+    private defaultList;
     create: (argument?: any) => any;
     createAll: (argument?: any) => any[];
+    private instantiateInjectable(injectable, argument);
     addInjectable: (injectable: {
         name: string;
         options: Options.Options;

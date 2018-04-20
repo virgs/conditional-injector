@@ -11,7 +11,7 @@ export enum Scope {
 export type Predicate = (argument: any) => boolean;
 
 
-export function createdDefaultOption(option?: Options): Options {
+export function completeAttributes(option?: Options): Options {
     const defaultOption: Options = { scope: Scope.Request}
     if (!option)
         return defaultOption;

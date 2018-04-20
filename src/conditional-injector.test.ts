@@ -49,6 +49,30 @@ describe('ConditionalInjector', function() {
         expect(injected).toBeInstanceOf(DefaultClass);
     });
 
+    it('should inject last DefaultObject if more than one is given', function() {
+        class ParentClass {};
+        @Injectable()
+        class DefaultClass extends ParentClass {}
+
+        @Injectable()
+        class PredicateClass extends ParentClass {}
+
+        const injected = Container.subclassesOf(ParentClass).create();
+        expect(injected).toBeInstanceOf(PredicateClass);
+    });
+
+    it('should inject every DefaultObject in create All', function() {
+        class DefaultParentClass {};
+        @Injectable()
+        class DefaultClass extends DefaultParentClass {}
+
+        @Injectable()
+        class PredicateClass extends DefaultParentClass {}
+
+        const injectedList = Container.subclassesOf(DefaultParentClass).createAll();
+        expect(injectedList.length).toBe(2);
+    });
+
     it('should return different instances if not singleton', function() {
         class ParentClass {};
         @Injectable()
