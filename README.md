@@ -1,6 +1,6 @@
-# conditional-injector
-It's a mix between dependency injection and factory method.
-So it instantiates one of the subclasses of a class based on an optional predicate.
+# Conditional-injector
+It's a mix of dependency injection and factory method.
+It gives you an instance of one subclasses of a class based on an optional predicate.
 ```
     import {Container, Injectable, Scope} from "conditional-injector";
         
@@ -74,5 +74,6 @@ If you want to, you can get every subclass instance of a given class:
      // "originalValue" 
      // "applicationValue"
 ``` 
-#####Note: 
-You need to enable typescript flags 'experimentalDecorators' and 'emitDecoratorMetadata'.
+##### Notes: 
+-   You need to enable typescript flags 'experimentalDecorators' and 'emitDecoratorMetadata'.
+-   Due to one *decoration* property, if a decorated class is never imported, the decoration function is never called. Therefore the class never gets registered to the container. You have to explicitly import the file that contains the class at least one time in order to make sure that that class is able to be injected.
