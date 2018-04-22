@@ -79,5 +79,7 @@ If you want to, you can get every subclass instance of a given class:
 -   Due to one *decoration* property, if a decorated class is never imported, the decoration function is never called. Therefore the class never gets registered to the container.
 You have to explicitly import the file that contains the class at least one time in order to make sure that that class is able to be injected.
 That's the reason for having a [script](./generate-injectables-list.sh) for generate this import list. Make sure to import the auto-generated file from this script:
-```./generate-injectables-list.sh src/injectable-files-list.ts src```
+```
+    generate-injectables-list.sh src/injectable-files-list.ts src
+```
  
