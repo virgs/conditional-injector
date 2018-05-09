@@ -141,7 +141,7 @@ describe('ConditionalInjector', function() {
         @Injectable({predicate: () => {throw Error()})
         class ExceptionSubClass extends ExceptionSuperClass {}
 
-        expect(() => Container.subclassesOf(ExceptionSuperClass).create()).not.toThrow();
+        expect(() => Container.subclassesOf(ExceptionSuperClass).create()).toThrow();
     });
 
     it('should handle predicate runtime error', function() {
@@ -149,8 +149,20 @@ describe('ConditionalInjector', function() {
         @Injectable({predicate: (argument) => argument.inexistentProperty.anotherThing})
         class ExceptionSubClass extends ExceptionSuperClass {}
 
-        Container.subclassesOf(ExceptionSuperClass).create("")
-        // expect(() => Container.get(ExceptionSuperClass).create()).not.toThrow();
+        expect(() => Container.subclassesOf(ExceptionSuperClass).create()).toThrow();
+    });
+
+    it('should handle constructor error', function() {
+        class ExceptionSuperClass {};
+        @Injectable()
+        class ExceptionSubClass extends ExceptionSuperClass {
+            constructor() {
+                super();
+                throw new Error("Error");
+            }
+        }
+
+        expect(() => Container.subclassesOf(ExceptionSuperClass).create()).toThrow();
     });
 
     it('should instantiate every subclass', function() {

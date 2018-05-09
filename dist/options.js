@@ -12,7 +12,7 @@ function completeAttributes(option) {
         return defaultOption;
     return {
         scope: option.scope || defaultOption.scope,
-        predicate: option.predicate || defaultOption.predicate
+        predicate: option.predicate
     };
 }
 exports.completeAttributes = completeAttributes;

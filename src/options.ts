@@ -16,6 +16,6 @@ export function completeAttributes(option?: Options): Options {
         return defaultOption;
     return {
         scope: option.scope || defaultOption.scope,
-        predicate: option.predicate  || defaultOption.predicate
+        predicate: option.predicate
     };
 }

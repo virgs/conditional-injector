@@ -5,7 +5,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
     result["default"] = mod;
     return result;
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Options = __importStar(require("./options"));
 let injectableContainer = {};
@@ -45,12 +45,16 @@ class ParentClassContainer {
                 const factoryPredicate = injectable.options.predicate;
                 if (!factoryPredicate)
                     continue;
+                let factoryPredicateResult = false;
                 try {
-                    if (factoryPredicate(argument)) {
-                        return this.instantiateInjectable(injectable, argument);
-                    }
+                    factoryPredicateResult = factoryPredicate(argument);
                 }
-                catch (err) { }
+                catch (err) {
+                    throw new Error(`Error executing factory predicate of ${injectable.name}`);
+                }
+                if (factoryPredicateResult) {
+                    return this.instantiateInjectable(injectable, argument);
+                }
             }
             if (this.defaultList.length > 0) {
                 let lastAddedDefault = this.defaultList[this.defaultList.length - 1];
@@ -77,15 +81,20 @@ class ParentClassContainer {
         };
     }
     instantiateInjectable(injectable, argument) {
-        if (injectable.singletonInstance) {
-            return injectable.singletonInstance;
+        try {
+            if (injectable.singletonInstance) {
+                return injectable.singletonInstance;
+            }
+            else if (injectable.options.scope == Options.Scope.Application) {
+                injectable.singletonInstance = new injectable.constructor(argument);
+                return injectable.singletonInstance;
+            }
+            else {
+                return new injectable.constructor(argument);
+            }
         }
-        else if (injectable.options.scope == Options.Scope.Application) {
-            injectable.singletonInstance = new injectable.constructor(argument);
-            return injectable.singletonInstance;
-        }
-        else {
-            return new injectable.constructor(argument);
+        catch (err) {
+            throw new Error(`Error instantiatinc object of ${injectable.name}`);
         }
     }
 }
