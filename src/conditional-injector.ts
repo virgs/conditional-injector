@@ -91,7 +91,7 @@ export class ParentClassContainer {
             }
         }
         catch (err) {
-            throw new Error(`Error instantiatinc object of ${injectable.name}`)
+            throw new Error(`Error instantiating object of ${injectable.name}`)
         }
 
     }
