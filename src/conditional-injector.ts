@@ -54,7 +54,7 @@ export class ParentClassContainer {
                 factoryPredicateResult = factoryPredicate(argument);
             }
             catch (err) {
-                throw new Error(`Error executing factory predicate of ${injectable.name}`)
+                throw new Error(`Error executing factory predicate of ${injectable.name}: ${err}`)
             }
             if (factoryPredicateResult) {
                 return this.instantiateInjectable(injectable, argument);
@@ -91,7 +91,7 @@ export class ParentClassContainer {
             }
         }
         catch (err) {
-            throw new Error(`Error instantiating object of ${injectable.name}`)
+            throw new Error(`Error instantiating object of ${injectable.name}: ${err}`)
         }
 
     }
