@@ -33,7 +33,7 @@
     "@types/jest": "^22.2.0",
     "@types/node": "^9.4.6",
     "jest": "^22.4.2",
-    "ts-jest": "^22.4.1",
+    "ts-jest": "^22.4.5",
     "ts-node": "^4.1.0",
     "tsd": "^0.6.5",
     "typescript": "^2.7.2"
@@ -53,8 +53,5 @@
       "jsx",
       "json"
     ]
-  },
-  "dependencies": {
-    "npm": "^5.8.0"
   }
 }
