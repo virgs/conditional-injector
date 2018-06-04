@@ -1,4 +1,4 @@
-# Conditional-injector
+# conditional-injector
 [![npm version](https://badge.fury.io/js/conditional-injector.svg)](https://badge.fury.io/js/conditional-injector)
 
 It's a mix of dependency injection and factory method.
