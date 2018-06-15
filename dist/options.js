@@ -5,11 +5,11 @@ var Scope;
     Scope[Scope["Application"] = 1] = "Application";
     Scope[Scope["Request"] = 2] = "Request";
 })(Scope = exports.Scope || (exports.Scope = {}));
-;
 function completeAttributes(option) {
     const defaultOption = { scope: Scope.Request };
-    if (!option)
+    if (!option) {
         return defaultOption;
+    }
     return {
         scope: option.scope || defaultOption.scope,
         predicate: option.predicate

@@ -1,8 +1,4 @@
-import * as Options from "./options";
-export declare class Container {
-    static subclassesOf(superClass: any): ParentClassContainer;
-}
-export declare function Injectable(options?: Options.Options): (constructor: any) => void;
+import * as Options from './options';
 export declare class ParentClassContainer {
     private predicatesList;
     private defaultList;
@@ -21,3 +17,7 @@ export declare class ParentClassContainer {
         singletonInstance?: any;
     };
 }
+export declare class Container {
+    static subclassesOf(superClass: any): ParentClassContainer;
+}
+export declare function Injectable(options?: Options.Options): (constructor: any) => void;

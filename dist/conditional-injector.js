@@ -9,33 +9,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Options = __importStar(require("./options"));
 let injectableContainer = {};
-class Container {
-    static subclassesOf(superClass) {
-        const superClassName = superClass.prototype.constructor.name;
-        return injectableContainer[superClassName] || { create: () => null };
-    }
-}
-exports.Container = Container;
-const getSuperClassContainer = (superClassName) => {
-    if (!injectableContainer[superClassName])
-        injectableContainer[superClassName] = new ParentClassContainer();
-    return injectableContainer[superClassName];
-};
-function Injectable(options) {
-    return function (constructor) {
-        var superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
-        const className = constructor.prototype.constructor.name;
-        const injectableContainer = getSuperClassContainer(superClassName);
-        let mergedOption = Options.completeAttributes(options);
-        injectableContainer
-            .addInjectable({
-            name: className,
-            constructor: constructor,
-            options: mergedOption
-        });
-    };
-}
-exports.Injectable = Injectable;
 class ParentClassContainer {
     constructor() {
         this.predicatesList = [];
@@ -43,8 +16,9 @@ class ParentClassContainer {
         this.create = (argument) => {
             for (const injectable of this.predicatesList) {
                 const factoryPredicate = injectable.options.predicate;
-                if (!factoryPredicate)
+                if (!factoryPredicate) {
                     continue;
+                }
                 let factoryPredicateResult = false;
                 try {
                     factoryPredicateResult = factoryPredicate(argument);
@@ -73,10 +47,12 @@ class ParentClassContainer {
             return returnList;
         };
         this.addInjectable = (injectable) => {
-            if (!injectable.options.predicate)
+            if (!injectable.options.predicate) {
                 this.defaultList.push(injectable);
-            else
+            }
+            else {
                 this.predicatesList.push(injectable);
+            }
             return injectable;
         };
     }
@@ -99,3 +75,31 @@ class ParentClassContainer {
     }
 }
 exports.ParentClassContainer = ParentClassContainer;
+class Container {
+    static subclassesOf(superClass) {
+        const superClassName = superClass.prototype.constructor.name;
+        return injectableContainer[superClassName] || { create: () => null };
+    }
+}
+exports.Container = Container;
+const getSuperClassContainer = (superClassName) => {
+    if (!injectableContainer[superClassName]) {
+        injectableContainer[superClassName] = new ParentClassContainer();
+    }
+    return injectableContainer[superClassName];
+};
+function Injectable(options) {
+    return function (constructor) {
+        const superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
+        const className = constructor.prototype.constructor.name;
+        const injectableContainer = getSuperClassContainer(superClassName);
+        let mergedOption = Options.completeAttributes(options);
+        injectableContainer
+            .addInjectable({
+            name: className,
+            constructor: constructor,
+            options: mergedOption
+        });
+    };
+}
+exports.Injectable = Injectable;
