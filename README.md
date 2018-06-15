@@ -1,5 +1,5 @@
 # conditional-injector
-[![npm version](https://badge.fury.io/js/conditional-injector.svg)](https://badge.fury.io/js/conditional-injector)
+[![npm version](https://badge.fury.io/js/conditional-injector.svg)](https://badge.fury.io/js/conditional-injector) [![Build Status](https://travis-ci.org/lopidio/conditional-injector.svg?branch=master)](https://travis-ci.org/lopidio/conditional-injector)
 
 It's a mix of dependency injection and factory method.
 It gives you an instance of one subclasses of a class based on an optional predicate.
