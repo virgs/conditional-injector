@@ -1,2 +1,6 @@
 tsconfig.json
 src
+.gitignore
+example.ts
+generate-injectables-list.sh
+tslint.json

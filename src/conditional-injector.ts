@@ -1,43 +1,13 @@
-import * as Options from "./options";
+import * as Options from './options';
 
 let injectableContainer: any = {};
-export class Container {
-    public static subclassesOf(superClass: any): ParentClassContainer {
-        const superClassName: string = superClass.prototype.constructor.name;
-        return injectableContainer[superClassName] || { create: () => null};
-    }
-}
-
-const getSuperClassContainer = (superClassName: string): any => {
-    if (!injectableContainer[superClassName])
-        injectableContainer[superClassName] = new ParentClassContainer();
-
-    return injectableContainer[superClassName];
-}
-
-export function Injectable(options?: Options.Options) {
-    return function(constructor: any) {
-        var superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
-        const className = constructor.prototype.constructor.name;
-        const injectableContainer: ParentClassContainer = getSuperClassContainer(superClassName);
-
-        let mergedOption = Options.completeAttributes(options);
-        injectableContainer
-            .addInjectable(
-                {
-                    name: className,
-                    constructor: constructor,
-                    options: mergedOption
-                });
-    };
-}
 
 type Injectable = {
     name: string;
     options: Options.Options;
     constructor: ObjectConstructor;
     singletonInstance?: any;
-}
+};
 
 export class ParentClassContainer {
 
@@ -47,14 +17,15 @@ export class ParentClassContainer {
     public create = (argument?: any): any => {
         for (const injectable of this.predicatesList) {
             const factoryPredicate = injectable.options.predicate;
-            if (!factoryPredicate)
+            if (!factoryPredicate) {
                 continue;
+            }
             let factoryPredicateResult = false;
             try {
                 factoryPredicateResult = factoryPredicate(argument);
             }
             catch (err) {
-                throw new Error(`Error executing factory predicate of ${injectable.name}: ${err}`)
+                throw new Error(`Error executing factory predicate of ${injectable.name}: ${err}`);
             }
             if (factoryPredicateResult) {
                 return this.instantiateInjectable(injectable, argument);
@@ -82,8 +53,7 @@ export class ParentClassContainer {
         try {
             if (injectable.singletonInstance) {
                 return injectable.singletonInstance;
-            }
-            else if (injectable.options.scope == Options.Scope.Application) {
+            } else if (injectable.options.scope == Options.Scope.Application) {
                 injectable.singletonInstance = new injectable.constructor(argument);
                 return injectable.singletonInstance;
             } else {
@@ -91,16 +61,49 @@ export class ParentClassContainer {
             }
         }
         catch (err) {
-            throw new Error(`Error instantiating object of ${injectable.name}: ${err}`)
+            throw new Error(`Error instantiating object of ${injectable.name}: ${err}`);
         }
 
     }
 
     public addInjectable = (injectable: Injectable): Injectable => {
-        if (!injectable.options.predicate)
+        if (!injectable.options.predicate) {
             this.defaultList.push(injectable);
-        else
+        } else {
             this.predicatesList.push(injectable);
+        }
         return injectable;
     }
+}
+
+export class Container {
+    public static subclassesOf(superClass: any): ParentClassContainer {
+        const superClassName: string = superClass.prototype.constructor.name;
+        return injectableContainer[superClassName] || { create: () => null};
+    }
+}
+
+const getSuperClassContainer = (superClassName: string): any => {
+    if (!injectableContainer[superClassName]) {
+        injectableContainer[superClassName] = new ParentClassContainer();
+    }
+
+    return injectableContainer[superClassName];
+};
+
+export function Injectable(options?: Options.Options) {
+    return function(constructor: any) {
+        const superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
+        const className = constructor.prototype.constructor.name;
+        const injectableContainer: ParentClassContainer = getSuperClassContainer(superClassName);
+
+        let mergedOption = Options.completeAttributes(options);
+        injectableContainer
+            .addInjectable(
+                {
+                    name: className,
+                    constructor: constructor,
+                    options: mergedOption
+                });
+    };
 }
