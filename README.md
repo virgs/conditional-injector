@@ -78,10 +78,12 @@ If you want to, you can get every subclass instance of a given class:
 ``` 
 ##### Notes: 
 -   You need to enable typescript flags 'experimentalDecorators' and 'emitDecoratorMetadata'.
--   Due to one *decoration* property, if a decorated class is never imported, the decoration function is never called. Therefore the class never gets registered to the container.
+-   Due to one *decoration* property, if a decorated class never gets imported, the decoration function never gets called. Therefore the class never gets registered to the container.
 You have to explicitly import the file that contains the class at least one time in order to make sure that that class is able to be injected.
-That's the reason for having a [script](./generate-injectables-list.sh) for generate this import list. Make sure to import the auto-generated file from this script:
+That's the reason for having a [script](./generate-injectables-list.sh).
+Although it's not mandatory, it makes your life easier creating an auto-generated source file from this script.
+You can use it like this:
 ```
     generate-injectables-list.sh src/injectable-files-list.ts src
 ```
- 
+ And then using the auto-generated file _src/injectable-files-list.ts_ in your project.
