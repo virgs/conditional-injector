@@ -7,6 +7,7 @@
   "scripts": {
     "test": "jest",
     "lint": "node_modules/.bin/tslint --project tsconfig.json --force",
+    "codeCoverage": "jest --silent --coverage",
     "build": "tsc"
   },
   "repository": {
@@ -43,6 +44,19 @@
     "json-placeholder-replacer": "dist/index.js"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/publishers/**",
+      "!src/subscriptions/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 95,
+        "branches": 95,
+        "functions": 95,
+        "lines": 95
+      }
+    },
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
