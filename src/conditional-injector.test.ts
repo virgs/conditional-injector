@@ -138,7 +138,9 @@ describe('ConditionalInjector', function() {
 
     it('should handle predicate exception', function() {
         class ExceptionSuperClass {};
-        @Injectable({predicate: () => {throw Error()})
+        @Injectable({predicate: () => {
+            throw Error('');
+        }})
         class ExceptionSubClass extends ExceptionSuperClass {}
 
         expect(() => Container.subclassesOf(ExceptionSuperClass).create()).toThrow();
