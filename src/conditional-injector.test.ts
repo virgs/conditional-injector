@@ -37,7 +37,7 @@ describe('ConditionalInjector', function() {
         expect(injected).toBeInstanceOf(AnotherDefaultClass);
     });
 
-    it('should inject DefaultObject if it does no predicate is satisfied', function() {
+    it('should inject DefaultObject when no predicate is satisfied', function() {
         class ParentClass {};
         @Injectable()
         class DefaultClass extends ParentClass {}
