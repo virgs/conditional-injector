@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/lopidio/conditional-injector#readme",
   "devDependencies": {
-    "@types/jest": "^23.3.9",
+    "@types/jest": "^24.0.0",
     "@types/node": "^10.11.5",
     "jest": "^23.6.0",
     "ts-jest": "^23.1.4",
