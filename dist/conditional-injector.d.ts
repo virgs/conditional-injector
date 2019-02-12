@@ -16,8 +16,10 @@ export declare class ParentClassContainer {
         constructor: ObjectConstructor;
         singletonInstance?: any;
     };
+    log: () => void;
 }
 export declare class Container {
     static subclassesOf(superClass: any): ParentClassContainer;
+    static logTree(): void;
 }
 export declare function Injectable(options?: Options.Options): (constructor: any) => void;
