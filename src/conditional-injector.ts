@@ -36,7 +36,7 @@ export class ParentClassContainer {
             return this.instantiateInjectable(lastAddedDefault, argument);
         }
         return null;
-    };
+    }
 
     public createAll = (argument?: any): any[] => {
         let returnList = [];
@@ -47,7 +47,7 @@ export class ParentClassContainer {
             returnList.push(this.instantiateInjectable(injectable, argument));
         }
         return returnList;
-    };
+    }
 
     private instantiateInjectable(injectable: Injectable, argument: any): any {
         try {
@@ -73,12 +73,12 @@ export class ParentClassContainer {
             this.predicatesList.push(injectable);
         }
         return injectable;
-    };
+    }
 
     public log = (): void => {
         console.log(`\t\tPredicates list: ${this.predicatesList.map((injectable: Injectable) => injectable.name).join('; ')}`);
         console.log(`\t\tDefault list: ${this.defaultList.map((injectable: Injectable) => injectable.name).join('; ')}`);
-    };
+    }
 }
 
 export class Container {
@@ -102,7 +102,6 @@ const getSuperClassContainer = (superClassName: string): any => {
     }
     return injectableContainer[superClassName];
 };
-
 
 export function Injectable(options?: Options.Options) {
     return function (constructor: any) {
