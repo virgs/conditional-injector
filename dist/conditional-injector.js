@@ -31,7 +31,7 @@ class ParentClassContainer {
                 }
             }
             if (this.defaultList.length > 0) {
-                let lastAddedDefault = this.defaultList[this.defaultList.length - 1];
+                const lastAddedDefault = this.defaultList[this.defaultList.length - 1];
                 return this.instantiateInjectable(lastAddedDefault, argument);
             }
             return null;
@@ -54,6 +54,10 @@ class ParentClassContainer {
                 this.predicatesList.push(injectable);
             }
             return injectable;
+        };
+        this.log = () => {
+            console.log(`\t\tPredicates list: ${this.predicatesList.map((injectable) => injectable.name).join('; ')}`);
+            console.log(`\t\tDefault list: ${this.defaultList.map((injectable) => injectable.name).join('; ')}`);
         };
     }
     instantiateInjectable(injectable, argument) {
@@ -79,6 +83,13 @@ class Container {
     static subclassesOf(superClass) {
         const superClassName = superClass.prototype.constructor.name;
         return injectableContainer[superClassName] || { create: () => null };
+    }
+    static logTree() {
+        console.log(`Container`);
+        for (let superClassName in injectableContainer) {
+            console.log(`\tSuperclass: ${superClassName}`);
+            injectableContainer[superClassName].log();
+        }
     }
 }
 exports.Container = Container;
