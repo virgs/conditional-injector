@@ -207,4 +207,25 @@ describe('ConditionalInjector', function() {
 
     });
 
+    it('should log container tree', function() {
+        console.log = jest.fn();
+
+        class LoggableSuperClass {}
+        @Injectable({predicate: (argument: string) => argument == 'A'})
+        class LoggableSubClassA extends LoggableSuperClass {}
+
+        @Injectable({predicate: (argument: string) => argument == 'B'})
+        class LoggableSubClassB extends LoggableSuperClass {}
+
+        @Injectable()
+        class LoggableSubClassC extends LoggableSuperClass {}
+
+        Container.logTree();
+
+        expect(console.log).toHaveBeenCalledWith('Container');
+        expect(console.log).toHaveBeenCalledWith('\tSuperclass: LoggableSuperClass');
+        expect(console.log).toHaveBeenCalledWith('\t\tPredicates list: LoggableSubClassA; LoggableSubClassB');
+        expect(console.log).toHaveBeenCalledWith('\t\tDefault list: LoggableSubClassC');
+    });
+
 });

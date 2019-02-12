@@ -32,11 +32,11 @@ export class ParentClassContainer {
             }
         }
         if (this.defaultList.length > 0) {
-            let lastAddedDefault = this.defaultList[this.defaultList.length - 1];
+            const lastAddedDefault = this.defaultList[this.defaultList.length - 1];
             return this.instantiateInjectable(lastAddedDefault, argument);
         }
         return null;
-    }
+    };
 
     public createAll = (argument?: any): any[] => {
         let returnList = [];
@@ -47,7 +47,7 @@ export class ParentClassContainer {
             returnList.push(this.instantiateInjectable(injectable, argument));
         }
         return returnList;
-    }
+    };
 
     private instantiateInjectable(injectable: Injectable, argument: any): any {
         try {
@@ -73,13 +73,26 @@ export class ParentClassContainer {
             this.predicatesList.push(injectable);
         }
         return injectable;
-    }
+    };
+
+    public log = (): void => {
+        console.log(`\t\tPredicates list: ${this.predicatesList.map((injectable: Injectable) => injectable.name).join('; ')}`);
+        console.log(`\t\tDefault list: ${this.defaultList.map((injectable: Injectable) => injectable.name).join('; ')}`);
+    };
 }
 
 export class Container {
     public static subclassesOf(superClass: any): ParentClassContainer {
         const superClassName: string = superClass.prototype.constructor.name;
-        return injectableContainer[superClassName] || { create: () => null};
+        return injectableContainer[superClassName] || {create: () => null};
+    }
+
+    public static logTree(): void {
+        console.log(`Container`);
+        for (let superClassName in injectableContainer) {
+            console.log(`\tSuperclass: ${superClassName}`);
+            injectableContainer[superClassName].log();
+        }
     }
 }
 
@@ -87,12 +100,12 @@ const getSuperClassContainer = (superClassName: string): any => {
     if (!injectableContainer[superClassName]) {
         injectableContainer[superClassName] = new ParentClassContainer();
     }
-
     return injectableContainer[superClassName];
 };
 
+
 export function Injectable(options?: Options.Options) {
-    return function(constructor: any) {
+    return function (constructor: any) {
         const superClassName = Object.getPrototypeOf(constructor.prototype).constructor.name;
         const className = constructor.prototype.constructor.name;
         const injectableContainer: ParentClassContainer = getSuperClassContainer(superClassName);
