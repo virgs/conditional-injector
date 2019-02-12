@@ -40,9 +40,6 @@
     "tslint": "^5.11.0",
     "typescript": "^3.0.1"
   },
-  "bin": {
-    "json-placeholder-replacer": "dist/index.js"
-  },
   "jest": {
     "collectCoverageFrom": [
       "src/conditional-injector.ts"
