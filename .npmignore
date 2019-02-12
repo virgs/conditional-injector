@@ -5,3 +5,4 @@ example.ts
 generate-injectables-list.sh
 tslint.json
 coverage
+.idea
