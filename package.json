@@ -1,7 +1,7 @@
 {
   "name": "conditional-injector",
   "version": "1.0.15",
-  "description": "Typescript dependency injectional based on conditional expressions",
+  "description": "Typescript dependency injection based on conditional expressions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -45,6 +45,7 @@
     "collectCoverageFrom": [
       "src/conditional-injector.ts"
     ],
+    "collectCoverage": true,
     "coverageThreshold": {
       "global": {
         "statements": 95,
