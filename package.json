@@ -1,6 +1,6 @@
 {
   "name": "conditional-injector",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Typescript dependency injection based on conditional expressions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
